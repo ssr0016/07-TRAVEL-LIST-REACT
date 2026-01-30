@@ -25,6 +25,14 @@ export default function App() {
     );
   }
 
+  function handleClearList() {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete all items?",
+    );
+
+    if (confirmed) setItems([]);
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -33,6 +41,7 @@ export default function App() {
         items={items}
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearList={handleClearList}
       />
       <Stats items={items} />
     </div>
@@ -83,7 +92,7 @@ export default function App() {
     );
   }
 
-  function PackingList({ items, onDeleteItem, onToggleItem }) {
+  function PackingList({ items, onDeleteItem, onToggleItem, onClearList }) {
     const [sortBy, setSortBy] = useState("input");
 
     let sortedItems;
@@ -105,10 +114,10 @@ export default function App() {
         <ul>
           {sortedItems.map((item) => (
             <Item
+              key={item.id}
               item={item}
               onDeleteItem={onDeleteItem}
               onToggleItem={onToggleItem}
-              key={item.id}
             />
           ))}
         </ul>
@@ -119,6 +128,7 @@ export default function App() {
             <option value="description">Sort by description</option>
             <option value="packed">Sort by packed status</option>
           </select>
+          <button onClick={onClearList}>Clear list</button>
         </div>
       </div>
     );
@@ -129,7 +139,7 @@ export default function App() {
       <li>
         <input
           type="checkbox"
-          value={item.packed}
+          checked={item.packed}
           onChange={() => onToggleItem(item.id)}
         />
         <span style={item.packed ? { textDecoration: "line-through" } : {}}>
